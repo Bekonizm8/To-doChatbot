@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container{
+            width: 80%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align: center;
+            color: #333;
+        }
+
+        form{
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]{
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button{
+            padding: 10px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background-color: #45a049;
+        }
+
+        .task{
+            background: #fafafa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 5px solid #4CAF50;
+        }
+
+        .completed{
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .delete-btn{
+            background-color: crimson;
+            margin-left: 10px;
+        }
+
+        .delete-btn:hover{
+            background-color: darkred;
+        }
+
+        .task-info{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>To-Do List</h1>
+
+        <!-- ADD TASK FORM -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input 
+                type="text" 
+                name="title" 
+                placeholder="Enter new task..."
+                required
+            >
+
+            <button type="submit">
+                Add Task
+            </button>
+
+        </form>
+
+        <!-- TASK LIST -->
+
+        {% for task in tasks %}
+
+            <div class="task">
+
+                <div class="task-info">
+
+                    <div>
+
+                        {% if task.completed %}
+
+                            <span class="completed">
+                                {{ task.title }}
+                            </span>
+
+                        {% else %}
+
+                            <span>
+                                {{ task.title }}
+                            </span>
+
+                        {% endif %}
+
+                        <br><br>
+
+                        <small>
+                            User: {{ task.user_name }}
+                        </small>
+
+                        <br>
+
+                        <small>
+                            Created: {{ task.created_at }}
+                        </small>
+
+                    </div>
+
+                    <div>
+
+                        <!-- COMPLETE BUTTON -->
+
+                        <a href="{% url 'complete_task' task.id %}">
+                            <button>
+                                Done
+                            </button>
+                        </a>
+
+                        <!-- DELETE BUTTON -->
+
+                        <a href="{% url 'delete_task' task.id %}">
+                            <button class="delete-btn">
+                                Delete
+                            </button>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p>No tasks yet.</p>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>
