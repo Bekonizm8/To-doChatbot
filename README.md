@@ -136,3 +136,9 @@ Replace with your Telegram Bot token.
 Open second terminal and run:
 
 python tasks/bot.py
+
+# Screenshots
+
+<img width="1246" height="965" alt="TelegramChatBot" src="https://github.com/user-attachments/assets/af3b79a3-3fd8-410a-b119-b6411783a88e" />
+
+<img width="1918" height="915" alt="Django Admin" src="https://github.com/user-attachments/assets/c4e3cf01-967e-47ce-b8cf-c22cb3dae70d" />
