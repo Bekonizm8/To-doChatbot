@@ -1,8 +1,0 @@
----
-
-# requirements.txt
-
-```txt id="rd2"
-Django
-python-telegram-bot
-asgiref
