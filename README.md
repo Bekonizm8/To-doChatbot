@@ -73,12 +73,3 @@ TaskFlow/
 ├── requirements.txt
 │
 └── README.md
-
----
-
-# Installation
-
-## 1. Clone project
-
-```bash
-git clone https://github.com/yourusername/taskflow.git
