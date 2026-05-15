@@ -127,7 +127,7 @@ tasks/bot.py
 
 Find:
 
-TOKEN = "YOUR_BOT_TOKEN"
+TOKEN = "8694156051:AAFjGyMF-ECzfAdTD0hS7G0kl_H9IKMD_Ks"
 
 Replace with your Telegram Bot token.
 
@@ -139,6 +139,8 @@ python tasks/bot.py
 
 # Screenshots
 
+## Telegram Chatbot
 <img width="1246" height="965" alt="TelegramChatBot" src="https://github.com/user-attachments/assets/af3b79a3-3fd8-410a-b119-b6411783a88e" />
 
+## Django Admin
 <img width="1918" height="915" alt="Django Admin" src="https://github.com/user-attachments/assets/c4e3cf01-967e-47ce-b8cf-c22cb3dae70d" />
