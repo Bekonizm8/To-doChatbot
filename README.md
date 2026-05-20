@@ -1,146 +1,314 @@
-# To-Do Chatbot
+# 📝 TaskFlow — To-Do Manager with Telegram Bot
 
-## Project Description
+## 📖 Описание проекта
 
-To-doChatbot is a hybrid To-Do management system created using Django and Telegram Bot API.
-
-The project allows users to:
-
-- Add tasks
-- Delete tasks
-- Search tasks
-- View task list
-- Mark tasks as completed
-
-The system works through:
-
-- Telegram Bot
-- Django Web Interface
-- SQLite Database
+**TaskFlow** — это система управления задачами, которая объединяет веб-интерфейс и Telegram-бота. Пользователи могут создавать, редактировать и отслеживать задачи как через браузер, так и прямо из Telegram. Веб-панель отображает аналитику в реальном времени: количество пользователей, общее число задач, выполненные и незавершённые. Telegram-бот позволяет управлять задачами через команды — устанавливать приоритеты, дедлайны, искать и отмечать задачи выполненными.
 
 ---
 
-# Technologies Used
+## 🛠 Используемые технологии
 
-- Python
-- Django
-- SQLite
-- python-telegram-bot
-- HTML/CSS
-
----
-
-# Features
-
-## Telegram Bot
-
-Commands:
-
-- /start
-- /add
-- /list
-- /delete
-- /search
-
-## Django Web Interface
-
-- Add tasks
-- Delete tasks
-- Complete tasks
-- Admin panel
-- Task list
+| Категория | Технология |
+|---|---|
+| Backend | Python 3.11+, Django 4+ |
+| Telegram Bot | python-telegram-bot 20+ |
+| База данных | SQLite (по умолчанию) / PostgreSQL |
+| Frontend | HTML5, CSS3 (Django Templates) |
+| Асинхронность | asyncio, asgiref |
+| ORM | Django ORM |
 
 ---
 
-# Project Structure
+## ⚙️ Инструкция по установке
 
-TaskFlow/
-│
-├── manage.py
-├── db.sqlite3
-│
-├── taskflow/
-│
-├── tasks/
-│   ├── models.py
-│   ├── views.py
-│   ├── bot.py
-│   ├── admin.py
-│
-├── templates/
-│   └── index.html
-│
-├── requirements.txt
-│
-└── README.md
+### 1. Клонируйте репозиторий
 
-# Installation Instruction
-## 1. Install Python
+```bash
+git clone https://github.com/your-username/taskflow.git
+cd taskflow
+```
 
-Download and install Python from:
-https://www.python.org/
+### 2. Создайте и активируйте виртуальное окружение
 
-## 2. Install Required Libraries
+```bash
+python -m venv venv
 
-Open terminal inside the project folder and run:
+# Windows
+venv\Scripts\activate
 
-pip install -r requirements.txt
+# macOS / Linux
+source venv/bin/activate
+```
 
-# Launch Insruction
+### 3. Установите зависимости
 
-## 1. Apply Database Migrations
+```bash
+pip install django python-telegram-bot requests asgiref
+```
 
-Run:
+### 4. Примените миграции базы данных
 
+```bash
 python manage.py makemigrations
 python manage.py migrate
+```
 
-## 2. Create Admin User
+### 5. Настройте токен Telegram-бота
 
-Run:
+Откройте `bot.py` и замените значение переменной `TOKEN` на токен вашего бота, полученный у [@BotFather](https://t.me/BotFather):
 
-python manage.py createsuperuser
+```python
+TOKEN = "ВАШ_ТОКЕН_ЗДЕСЬ"
+```
 
-Enter:
-- username
-- email
-- password
+---
 
-## 3. Start Django Server
+## 🚀 Инструкция по запуску
 
-Run:
+### Запуск веб-сервера Django
 
+```bash
 python manage.py runserver
+```
 
-Open browser:
+Веб-интерфейс будет доступен по адресу: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-http://127.0.0.1:8000/
+### Запуск Telegram-бота
 
-Admin panel:
+В отдельном терминале (при активированном виртуальном окружении):
 
-http://127.0.0.1:8000/admin/
-
-## 4. Configure Telegram Bot
-
-Open:
-tasks/bot.py
-
-Find:
-
-TOKEN = "8694156051:AAFjGyMF-ECzfAdTD0hS7G0kl_H9IKMD_Ks"
-
-Replace with your Telegram Bot token.
-
-## 5. Start Telegram Bot
-
-Open second terminal and run:
-
+```bash
 python tasks/bot.py
+```
 
-# Screenshots
+В консоли появится сообщение `Bot is running...` — бот готов к работе.
 
-## Telegram Chatbot
-<img width="1246" height="965" alt="TelegramChatBot" src="https://github.com/user-attachments/assets/af3b79a3-3fd8-410a-b119-b6411783a88e" />
+> **Важно:** Django-сервер и бот работают независимо, но используют общую базу данных. Можно запускать оба одновременно.
 
-## Django Admin
-<img width="1918" height="915" alt="Django Admin" src="https://github.com/user-attachments/assets/c4e3cf01-967e-47ce-b8cf-c22cb3dae70d" />
+---
+
+## 💬 Примеры работы чат-бота
+
+### `/start` — Приветствие
+```
+Пользователь: /start
+
+Бот: Welcome to TodoChat-Bot!
+     Use /help to see available commands.
+```
+
+### `/add` — Добавление задачи
+```
+Пользователь: /add
+
+Бот: Enter task title:
+
+Пользователь: Купить продукты
+
+Бот: Task added: Купить продукты
+```
+
+### `/list` — Список задач
+```
+Пользователь: /list
+
+Бот: Your tasks:
+     1. Купить продукты ❌
+        Priority: None  Deadline: None
+     2. Сделать домашнее задание ✔
+        Priority: High  Deadline: 2025-06-01 12:00:00
+```
+
+### `/complete` — Отметить задачу выполненной
+```
+Пользователь: /complete
+
+Бот: Your tasks:
+     1. Купить продукты ❌
+        Priority: None  Deadline: None
+
+     Enter task number to mark as completed:
+
+Пользователь: 1
+
+Бот: Marked as completed: Купить продукты
+```
+
+### `/priority` — Установка приоритета
+```
+Пользователь: /priority
+
+Бот: Your tasks:
+     1. Купить продукты ✔
+        Priority: None  Deadline: None
+
+     Enter task number to set priority:
+
+Пользователь: 1
+
+Бот: Current priority: None
+     Enter new priority (Low, Medium, High):
+
+Пользователь: High
+
+Бот: Task priority updated: High
+```
+
+### `/deadline` — Установка дедлайна
+```
+Пользователь: /deadline
+
+Бот: Enter task number to set deadline:
+
+Пользователь: 1
+
+Бот: Current deadline: None
+     Enter new deadline (YYYY-MM-DD):
+
+Пользователь: 2025-06-15
+
+Бот: Task deadline updated: 2025-06-15
+```
+
+### `/search` — Поиск задачи
+```
+Пользователь: /search
+
+Бот: Enter keyword:
+
+Пользователь: продукты
+
+Бот: Found tasks:
+     1. Купить продукты ✔
+        Priority: High  Deadline: None
+```
+
+### `/stats` — Статистика
+```
+Пользователь: /stats
+
+Бот: Task Statistics:
+
+     Total tasks: 5
+     Completed tasks: 3
+     Pending tasks: 2
+```
+
+### `/overdue` — Просроченные задачи
+```
+Пользователь: /overdue
+
+Бот: Overdue tasks:
+
+     1. Сдать отчёт ❌
+        Priority: High  Deadline: 2025-05-01 00:00:00
+```
+
+### `/clear` — Очистить все задачи
+```
+Пользователь: /clear
+
+Бот: All tasks cleared.
+```
+
+### Неизвестная команда
+```
+Пользователь: /random
+
+Бот: Unknown command. Please use /help to see available commands.
+     Не такая команды. Пожалуйста, используйте /help чтобы увидеть доступные команды.
+```
+
+---
+
+## 🖥 Скриншоты интерфейса
+
+### Главная страница — список задач и аналитика
+
+```
+┌─────────────────────┬──────────────────────────────────────────┐
+│     Analytics       │         To-Do Manager                    │
+│                     │                                          │
+│  👥 Users      3    │  ┌────────────────────────────────────┐  │
+│  📋 Total     12    │  │ What needs to be done?   [Add Task]│  │
+│  ⏳ Pending    7    │  └────────────────────────────────────┘  │
+│  ✅ Completed  5    │                                          │
+│                     │  ┌──────────────────────────────────┐    │
+│                     │  │ Купить продукты          🔴 High  │    │
+│                     │  │ 👤 Иван  📅 20 May 2025          │    │
+│                     │  │ ⏰ 2025-06-15                    │    │
+│                     │  │ [Done]            [Delete]        │    │
+│                     │  └──────────────────────────────────┘    │
+│                     │                                          │
+│                     │  ┌──────────────────────────────────┐    │
+│                     │  │ ~~Сделать задание~~      🟢 Low   │    │
+│                     │  │ 👤 Мария  📅 18 May 2025         │    │
+│                     │  │ ⏰ No deadline                   │    │
+│                     │  │ [Done]            [Delete]        │    │
+│                     │  └──────────────────────────────────┘    │
+└─────────────────────┴──────────────────────────────────────────┘
+```
+
+> Веб-интерфейс реализован в тёмной теме с боковой панелью аналитики слева и списком задач справа. Завершённые задачи отображаются перечёркнутым текстом. Приоритеты выделены цветом: 🔴 High, 🟡 Medium, 🟢 Low.
+
+### Telegram-бот в действии
+
+```
+┌──────────────────────────────┐
+│  TodoChat-Bot                │
+│                              │
+│  /start                      │
+│                              │
+│  Welcome to TodoChat-Bot! 🤖 │
+│  Use /help to see commands.  │
+│                              │
+│  /add                        │
+│                              │
+│  Enter task title:           │
+│                              │
+│  Подготовить презентацию     │
+│                              │
+│  Task added:                 │
+│  Подготовить презентацию ✅  │
+└──────────────────────────────┘
+```
+
+---
+
+## 📁 Структура проекта
+
+```
+taskflow/
+├── taskflow/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── tasks/
+│   ├── models.py       # Модель Task
+│   ├── views.py        # Веб-обработчики
+│   ├── bot.py          # Telegram-бот
+│   └── templates/
+│       └── index.html  # Веб-интерфейс
+└── manage.py
+```
+
+---
+
+## 📋 Полный список команд бота
+
+| Команда | Описание |
+|---|---|
+| `/start` | Запустить бота |
+| `/help` | Показать все команды |
+| `/add` | Добавить задачу |
+| `/list` | Показать все задачи |
+| `/delete` | Удалить задачу |
+| `/complete` | Отметить задачу выполненной |
+| `/edit` | Редактировать задачу |
+| `/search` | Найти задачу по ключевому слову |
+| `/priority` | Установить приоритет (Low / Medium / High) |
+| `/deadline` | Установить дедлайн (YYYY-MM-DD) |
+| `/overdue` | Показать просроченные задачи |
+| `/stats` | Статистика задач |
+| `/clear` | Удалить все задачи |
+| `/cancel` | Отменить текущую операцию |
