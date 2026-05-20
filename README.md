@@ -236,18 +236,36 @@ python tasks/bot.py
 ## 📁 Структура проекта
 
 ```
-taskflow/
+To-doChatbot/
+├── Screenshots/
+│   ├── commands.png
+│   ├── Django Admin.png
+│   ├── TelegramChatBot.png
+│   └── Website
 ├── taskflow/
+│   ├── _pycache_/
+│   ├── _init_.py
+│   ├── asgi.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
 ├── tasks/
-│   ├── models.py       # Модель Task
-│   ├── views.py        # Веб-обработчики
-│   ├── bot.py          # Telegram-бот
-│   └── templates/
-│       └── index.html  # Веб-интерфейс
-└── manage.py
+│   ├── _pycache_/
+│   ├── migrations/
+│   ├── _init_.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── bot.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── templates/
+│   └── index.html
+├── db.sqlite
+├── manage.py
+├── README.md
+└── requiriments.txt   
 ```
 
 ---
