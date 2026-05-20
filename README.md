@@ -222,15 +222,16 @@ python tasks/bot.py
 ---
 
 ## 🖥 Скриншоты интерфейса
-
 ### Главная страница — список задач и аналитика
 <img width="1918" height="767" alt="Website" src="https://github.com/user-attachments/assets/db02fd04-0bf1-4373-9c95-0da648b3bea3" />
 > Веб-интерфейс реализован в тёмной теме с боковой панелью аналитики слева и списком задач справа. Завершённые задачи отображаются перечёркнутым текстом. Приоритеты выделены цветом: 🔴 High, 🟡 Medium, 🟢 Low.
-> 
+
 ### Telegram-бот в действии
 <img width="1246" height="965" alt="TelegramChatBot" src="https://github.com/user-attachments/assets/6a5700de-18a5-46cb-9bed-777f6021da57" />
+
 ### Django админка
 <img width="1918" height="915" alt="Django Admin" src="https://github.com/user-attachments/assets/e16eafbe-dd34-424f-ace8-e2a0813ab734" />
+
 
 ## 📁 Структура проекта
 
