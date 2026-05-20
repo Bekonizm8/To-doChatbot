@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+            background: linear-gradient(135deg, #0f0f12 0%, #16161a 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Главная сетка: статистика слева, контент справа */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* БОКОВАЯ ПАНЕЛЬ С СТАТИСТИКОЙ */
+        .sidebar {
+            background: rgba(30, 30, 38, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            height: fit-content;
+            position: sticky;
+            top: 40px;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card {
+            background: #181820;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Цветовые акценты для цифр */
+        .value-users { color: #a5b4fc; }
+        .value-total { color: #f8fafc; }
+        .value-pending { color: #fbbf24; }
+        .value-completed { color: #34d399; }
+
+
+        /* ОСНОВНОЙ КОНТЕНТ */
+        .main-content {
+            background: rgba(30, 30, 38, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin-bottom: 35px;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ФОРМА ДОБАВЛЕНИЯ */
+        .task-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .task-form input {
+            flex: 1;
+            padding: 16px 20px;
+            background: #181820;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            font-size: 16px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .task-form input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: #1c1c27;
+        }
+
+        .task-form input::placeholder {
+            color: #64748b;
+        }
+
+        .task-form button {
+            padding: 16px 28px;
+            border: none;
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: white;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .task-form button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* КАРТОЧКА ЗАДАЧИ */
+        .task-card {
+            background: #1e1e26;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 24px;
+            margin-bottom: 20px;
+            border-radius: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .task-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.4;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #64748b;
+            opacity: 0.6;
+        }
+
+        /* ПРИОРИТЕТЫ */
+        .priority {
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .high { color: #f87171; background: rgba(248, 113, 113, 0.1); padding: 4px 10px; border-radius: 20px; }
+        .medium { color: #fbbf24; background: rgba(251, 191, 36, 0.1); padding: 4px 10px; border-radius: 20px; }
+        .low { color: #34d399; background: rgba(52, 211, 153, 0.1); padding: 4px 10px; border-radius: 20px; }
+
+        /* ИНФО О ЗАДАЧЕ */
+        .task-info {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            font-size: 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* КНОПКИ ДЕЙСТВИЙ */
+        .buttons {
+            margin-top: 24px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            flex: 1;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .done-btn {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .done-btn:hover {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .delete-btn {
+            background: rgba(244, 63, 94, 0.1);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .delete-btn:hover {
+            background: #e11d48;
+            color: white;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            font-size: 16px;
+            margin-top: 40px;
+            padding: 40px;
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+        }
+
+        /* АДАПТИВНОСТЬ ПОД МОБИЛЬНЫЕ УСТРОЙСТВА */
+        @media (max-width: 850px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-grid">
+        
+        <!-- СЛЕВА: ПАНЕЛЬ СТАТИСТИКИ -->
+        <aside class="sidebar">
+            <h2>Analytics</h2>
+            
+            <div class="stat-card">
+                <span class="stat-label">👥 Users</span>
+                <span class="stat-value value-users">{{ total_users|default:"0" }}</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">📋 Total Tasks</span>
+                <span class="stat-value value-total">{{ total_tasks|default:"0" }}</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">⏳ Pending</span>
+                <span class="stat-value value-pending">{{ pending_tasks|default:"0" }}</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">✅ Completed</span>
+                <span class="stat-value value-completed">{{ completed_tasks|default:"0" }}</span>
+            </div>
+        </aside>
+
+        <!-- СПРАВА: ОСНОВНОЙ КОНТЕНТ МЕНЕДЖЕРА ЗАДАЧ -->
+        <main class="main-content">
+            <h1>To-Do Manager</h1>
+
+            <!-- ФОРМА ДОБАВЛЕНИЯ -->
+            <form method="POST" class="task-form">
+                {% csrf_token %}
+                <input 
+                    type="text"
+                    name="title"
+                    placeholder="What needs to be done?"
+                    required
+                >
+                <button type="submit">
+                    Add Task
+                </button>
+            </form>
+
+            <!-- СПИСОК ЗАДАЧ -->
+            {% for task in tasks %}
+                <div class="task-card">
+                    <div class="task-top">
+                        {% if task.completed %}
+                            <div class="task-title completed">
+                                {{ task.title }}
+                            </div>
+                        {% else %}
+                            <div class="task-title">
+                                {{ task.title }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- ПРИОРИТЕТ -->
+                    <div class="priority">
+                        {% if task.priority == "High" %}
+                            <span class="high">🔴 High Priority</span>
+                        {% elif task.priority == "Medium" %}
+                            <span class="medium">🟡 Medium Priority</span>
+                        {% else %}
+                            <span class="low">🟢 Low Priority</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- ИНФО О ЗАДАЧЕ -->
+                    <div class="task-info">
+                        <div class="info-item">
+                            👤 {{ task.user_name }}
+                        </div>
+                        <div class="info-item">
+                            📅 {{ task.created_at|date:"d M Y" }}
+                        </div>
+                        <div class="info-item">
+                            ⏰ {% if task.deadline %}{{ task.deadline }}{% else %}No deadline{% endif %}
+                        </div>
+                    </div>
+
+                    <!-- КНОПКИ -->
+                    <div class="buttons">
+                        <a href="{% url 'complete_task' task.id %}">
+                            <button class="btn done-btn">Done</button>
+                        </a>
+                        <a href="{% url 'delete_task' task.id %}">
+                            <button class="btn delete-btn">Delete</button>
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty">
+                    ✨ All caught up! No tasks yet.
+                </div>
+            {% endfor %}
+        </main>
+
+    </div>
+
+</body>
+</html>
